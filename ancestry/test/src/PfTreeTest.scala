@@ -51,8 +51,8 @@ class PfTreeTests extends AnyFlatSpec with should.Matchers {
       leaf.data.weight = math.max(w, 0.0001)
       sumW += leaf.data.weight
     }
-
-    leaves.foreach { _.data.weight *= 1 / sumW }
+    val invSum = 1.0 / sumW
+    leaves.foreach { _.data.weight *= invSum }
   }
 
   "Ancestry tree" should "hold its properties when tracking the particles" in {
