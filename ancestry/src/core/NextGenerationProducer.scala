@@ -5,8 +5,8 @@ trait NextGenerationProducer[T] {
   /** Produces an ancestry tree representing the next generation.
     *
     * @param breed
-    *   Defines the offspring for the data in the leaves. Returning an empty Seq here corresponds to the bloodline being
-    *   dead.
+    *   Defines the offspring for the data in the leaves. Returning an empty Seq here corresponds to
+    *   the bloodline being dead.
     * @param merge
     *   Defines how the data should be combined when only child is merged to the parent.
     * @return
@@ -38,7 +38,11 @@ trait NextGenerationProducer[T] {
     }
   }
 
-  private def mergeOnlyChildWithParent(parent: Tree[T], child: Tree[T], merge: (T, T) => T): Option[Tree[T]] = {
+  private def mergeOnlyChildWithParent(
+      parent: Tree[T],
+      child: Tree[T],
+      merge: (T, T) => T
+  ): Option[Tree[T]] = {
     val mergedData = merge(parent.data, child.data)
     child match {
       case childLeaf: Leaf[T] => Some(Leaf[T](mergedData)) // This just becomes the leaf
