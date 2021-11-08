@@ -28,8 +28,7 @@ sealed trait Tree[T] extends NextGenerationProducer[T] with Iterable[Tree[T]] {
   def nodes: List[Tree[T]]
   def nodeCount: Int
   def leaves: List[Leaf[T]] = leavesAcc(Nil)
-  lazy val leavesCached = leavesAcc(Nil)
-  lazy val leafDataCached = leavesCached.map { _.data }
+  lazy val leavesCached: ArraySeq[Leaf[T]] = ArraySeq(leavesAcc(Nil)*)
   def leafCount: Int
 
   private[core] def leavesAcc(acc: List[Leaf[T]]): List[Leaf[T]]
