@@ -16,18 +16,18 @@ class TreeTests extends AnyFlatSpec with should.Matchers {
 
   it should "minimize tree and combine elements" in {
     val minimized = tree.nextGeneration(
-      breed = (s: String) => Seq(""),
+      breed = (s: String) => List(""),
       merge = (s1: String, s2: String) => s1 + s2
     )
     println("Trimmed tree: " + debugString(minimized.get))
 
   }
 
-  def stringBreed(s: String): Seq[String] = s match {
-    case "x"       => Seq("x1", "x2", "x3")
-    case "q"       => Seq("q1")
-    case "p" | "w" => Seq()
-    case _         => Seq("")
+  def stringBreed(s: String): List[String] = s match {
+    case "x"       => List("x1", "x2", "x3")
+    case "q"       => List("q1")
+    case "p" | "w" => List()
+    case _         => List("")
   }
 
   it should "produce offspring" in {
@@ -63,9 +63,9 @@ class TreeTests extends AnyFlatSpec with should.Matchers {
       currentTree = actualTree.nextGeneration(
         breed = (_: String) => {
           val r = scala.util.Random.nextDouble()
-          if (r < 0.33 && bigEnough) Seq()
-          else if (r < 0.67) Seq("g" + i)
-          else Seq("g" + i, "h" + i)
+          if (r < 0.33 && bigEnough) Nil
+          else if (r < 0.67) List("g" + i)
+          else List("g" + i, "h" + i)
         },
         merge = (s1: String, s2: String) => s1 + s2
       )

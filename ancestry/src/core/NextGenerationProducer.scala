@@ -13,7 +13,7 @@ trait NextGenerationProducer[T] {
     *   The next generation tree.
     */
   def nextGeneration(
-      breed: T => Seq[T],
+      breed: T => List[T],
       merge: (T, T) => T
   ): Option[Tree[T]] = {
 
@@ -23,7 +23,7 @@ trait NextGenerationProducer[T] {
         childData.size match {
           case 0 => None // Bloodline is dead
           case 1 => Some(Leaf(data = merge(leaf.data, childData.head)))
-          case _ => Some(Branch(leaf.data, childData.map(d => Leaf(d))))
+          case _ => Some(Branch(leaf.data, childData.map(d => Leaf(d)).toList))
         }
       }
 

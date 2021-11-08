@@ -25,10 +25,14 @@ sealed trait Tree[T] extends NextGenerationProducer[T] with Iterable[Tree[T]] {
   // Recursively updates subtrees based on data weighing
   def updateWeight(dataWeight: T => Double): Double
 
-  def nodes: Seq[Tree[T]]
+  def nodes: List[Tree[T]]
   def nodeCount: Int
-  def leaves: Seq[Leaf[T]]
+  def leaves: List[Leaf[T]] = leavesAcc(Nil)
+  lazy val leavesCached = leavesAcc(Nil)
+  lazy val leafDataCached = leavesCached.map { _.data }
   def leafCount: Int
+
+  private[core] def leavesAcc(acc: List[Leaf[T]]): List[Leaf[T]]
 
   // Ancestors starting from current node and ending to the root
   def ancestors: List[Tree[T]] = this :: parent.map { _.ancestors }.getOrElse(Nil)
@@ -41,14 +45,14 @@ sealed trait Tree[T] extends NextGenerationProducer[T] with Iterable[Tree[T]] {
 
 final case class Branch[T](
     data: T,
-    children: Seq[Tree[T]]
+    children: List[Tree[T]]
 ) extends Tree[T] {
   require(children.nonEmpty, "Branch needs children")
 
   // Rewire parents
   children.foreach { _.parent = Some(this) }
 
-  def this(data: T, child: Tree[T]) = this(data, Seq(child))
+  def this(data: T, child: Tree[T]) = this(data, List(child))
 
   def depth: Int = 1 + children.map { _.depth }.max
   def updateWeight(dataWeight: T => Double): Double = {
@@ -56,9 +60,14 @@ final case class Branch[T](
     weight
   }
 
-  def nodes: Seq[Tree[T]] = this +: children.flatMap(_.nodes)
+  def nodes: List[Tree[T]] = this :: children.flatMap(_.nodes)
   def nodeCount: Int = 1 + children.map { _.nodeCount }.sum
-  def leaves: Seq[Leaf[T]] = children.flatMap { _.leaves }
+
+  def leavesAcc(acc: List[Leaf[T]]) = {
+    var acc2 = acc
+    children.foreach { c => acc2 = c.leavesAcc(acc2) }
+    acc2
+  }
   def leafCount: Int = children.map { _.leafCount }.sum
 
 }
@@ -68,9 +77,10 @@ final case class Leaf[T](
 ) extends Tree[T] {
 
   def depth: Int = 1
-  def nodes = Seq(this)
+  def nodes = List(this)
   def nodeCount: Int = 1
-  def leaves: Seq[Leaf[T]] = Seq(this)
+
+  def leavesAcc(acc: List[Leaf[T]]) = this :: acc
   def leafCount: Int = 1
 
   def updateWeight(weigthFunction: T => Double): Double = {

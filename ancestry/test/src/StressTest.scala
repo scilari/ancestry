@@ -19,8 +19,7 @@ class StressTest extends AnyFlatSpec with should.Matchers {
   object Particle {
     def merge(a: Particle, b: Particle) = Particle(a.k + b.k)
     def breed(p: Particle) = {
-      val children = p.children.toSeq
-      p.children.clear()
+      val children = p.children.toList
       children
     }
     def randomChild = Particle(
@@ -31,7 +30,7 @@ class StressTest extends AnyFlatSpec with should.Matchers {
   // Selected for stress test to match the amount of particles used in FootSLAM
   val particleCount = 30000
 
-  var tree = AncestryTree.fromElements(Particle(1), Seq.fill(particleCount)(Particle(1)))
+  var tree = AncestryTree.fromElements(Particle(1), List.fill(particleCount)(Particle(1)))
 
   def particles = tree.leaves.map { _.data }.toArray
   def weights = particles.map { _.weight }.toArray
@@ -58,6 +57,12 @@ class StressTest extends AnyFlatSpec with should.Matchers {
     for t <- 0 until updateCount do
       if (t % 100 == 0) println(s"Stress test iteration $t/$updateCount")
       updateWeights(tree)
+
+      for (i <- (0 until 5)) {
+        val leavesData = tree.leafDataCached
+        //println(leaves.size)
+      }
+
       resampleParticles(particles, weights)
       tree = tree.nextGeneration(Particle.breed(_), Particle.merge(_, _)) match {
         case Some(tree) => tree
@@ -66,15 +71,14 @@ class StressTest extends AnyFlatSpec with should.Matchers {
           null
       }
 
-    //assert(tree.size <= 2 * particleCount + 1, "Tree node size is bounded by O(particleCount)")
-    //assert(tree.leafCount == particleCount, "Particle count should stay constant")
-    //assert(tree.depth <= t + 2, "Depth should not exceed updates")
+    // assert(tree.size <= 2 * particleCount + 1, "Tree node size is bounded by O(particleCount)")
+    // assert(tree.leafCount == particleCount, "Particle count should stay constant")
+    // assert(tree.depth <= t + 2, "Depth should not exceed updates")
 
     val dt = System.currentTimeMillis - t0
     info(
       s"Updating $updateCount times took $dt ms. Time per update ${dt / updateCount.toDouble} ms."
     )
-    // println(debugString(tree))
 
   }
 

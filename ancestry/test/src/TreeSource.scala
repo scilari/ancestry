@@ -4,22 +4,22 @@ object TreeSource {
   val tree: Tree[String] =
     Branch(
       "R",
-      Seq(
+      List(
         Branch(
           "A",
-          Seq(
+          List(
             Leaf("x"),
-            Branch("y", Seq(Leaf("1"), Leaf("2"), Leaf("3"))),
+            Branch("y", List(Leaf("1"), Leaf("2"), Leaf("3"))),
             Leaf("z")
           )
         ),
-        Branch("B", Seq(Leaf("w"))),
+        Branch("B", List(Leaf("w"))),
         Branch(
           "C",
-          Seq(
+          List(
             Branch(
               "D",
-              Seq(
+              List(
                 Leaf("p"),
                 Leaf("q"),
                 Leaf("r")

@@ -19,9 +19,9 @@ class PfTreeTests extends AnyFlatSpec with should.Matchers {
   object Particle {
     def merge(a: Particle, b: Particle) = Particle(a.s + b.s)
     def breed(p: Particle) = {
-      val children = p.children.toSeq
+      val children = p.children
       p.children.clear()
-      children
+      children.toList
     }
     def randomChild = Particle(
       if (scala.util.Random.nextDouble() < 0.5) "a" else "b"
@@ -30,7 +30,7 @@ class PfTreeTests extends AnyFlatSpec with should.Matchers {
 
   val particleCount = 10
 
-  var tree = AncestryTree.fromElements(Particle("R"), Seq.fill(particleCount)(Particle("a")))
+  var tree = AncestryTree.fromElements(Particle("R"), List.fill(particleCount)(Particle("a")))
 
   def particles = tree.leaves.map { _.data }.toArray
   def weights = particles.map { _.weight }.toArray
