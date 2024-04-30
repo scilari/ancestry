@@ -1,11 +1,11 @@
 import mill._, scalalib._
 
 object ancestry extends ScalaModule {
-  def scalaVersion = "3.0.2"
+  def scalaVersion = "3.3.3"
 
   def publishVersion = "0.0.1"
 
-  object test extends Tests with TestModule.ScalaTest {
+  object test extends ScalaTests with TestModule.ScalaTest {
     override def ivyDeps =
       Agg(
         ivy"com.lihaoyi::utest::0.7.10",
