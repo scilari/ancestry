@@ -1,6 +1,6 @@
 import mill._, scalalib._
 
-object ancestry extends ScalaModule {
+object ancestry extends ScalaModule with ScalaJSModule {
   def scalaVersion = "3.3.3"
 
   def publishVersion = "0.0.1"
