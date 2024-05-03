@@ -3,16 +3,14 @@ package com.scilari.ancestry.core
 import scala.collection.immutable.ArraySeq
 import com.scilari.ancestry.AncestryTree
 
-sealed trait Tree[T] extends NextGenerationProducer[T] with Iterable[Tree[T]] {
+sealed trait Tree[T] extends NextGenerationProducer[T] {
 
   // Payload
   val data: T
 
   // Combined weight of this subtree (updated by updateWeight)
   var weight: Double = 0.0
-
-  override def iterator: Iterator[Tree[T]] = nodes.iterator
-
+  
   // Distance to the furthers leaf
   def depth: Int
 
