@@ -60,7 +60,7 @@ class StressTest extends AnyFlatSpec with should.Matchers {
 
       for (i <- (0 until 5)) {
         val leaves = tree.leavesCached
-        println(leaves.size)
+        // println(leaves.size)
       }
 
       resampleParticles(particles, weights)

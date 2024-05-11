@@ -19,9 +19,9 @@ class PfTreeTests extends AnyFlatSpec with should.Matchers {
   object Particle {
     def merge(a: Particle, b: Particle) = Particle(a.s + b.s)
     def breed(p: Particle) = {
-      val children = p.children
+      val children = p.children.toList
       p.children.clear()
-      children.toList
+      children
     }
     def randomChild = Particle(
       if (scala.util.Random.nextDouble() < 0.5) "a" else "b"
@@ -36,7 +36,7 @@ class PfTreeTests extends AnyFlatSpec with should.Matchers {
   def weights = particles.map { _.weight }.toArray
 
   def resampleParticles(particles: Array[Particle], weights: Array[Double]) =
-    Resampling.resampleIndices(weights).map { i =>
+    Resampling.resampleIndices(weights).indices.map { i =>
       particles(i).children += Particle.randomChild
     }
 
@@ -56,6 +56,7 @@ class PfTreeTests extends AnyFlatSpec with should.Matchers {
   }
 
   "Ancestry tree" should "hold its properties when tracking the particles" in {
+    println("Tree size: " + tree.size)
     for t <- 0 until 10 do
       updateWeights(tree)
       resampleParticles(particles, weights)
