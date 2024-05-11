@@ -10,7 +10,7 @@ sealed trait Tree[T] extends NextGenerationProducer[T] {
 
   // Combined weight of this subtree (updated by updateWeight)
   var weight: Double = 0.0
-  
+
   // Distance to the furthers leaf
   def depth: Int
 
@@ -22,6 +22,8 @@ sealed trait Tree[T] extends NextGenerationProducer[T] {
 
   // Recursively updates subtrees based on data weighing
   def updateWeight(dataWeight: T => Double): Double
+
+  def size = nodes.size
 
   def nodes: List[Tree[T]]
   def nodeCount: Int

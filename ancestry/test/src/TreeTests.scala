@@ -39,7 +39,7 @@ class TreeTests extends AnyFlatSpec with should.Matchers {
   }
 
   it should "produce correct ancestors" in {
-    val xAncestors = tree.find(_.data == "x").get.ancestors.map(_.data)
+    val xAncestors = tree.nodes.find(_.data == "x").get.ancestors.map(_.data)
     println(xAncestors.mkString(" -> "))
     xAncestors should contain theSameElementsInOrderAs List("x", "A", "R")
     val next = tree
@@ -48,7 +48,7 @@ class TreeTests extends AnyFlatSpec with should.Matchers {
         merge = (s1: String, s2: String) => s1 + s2
       )
       .get
-    val x1Ancestors = next.find(_.data == "x1").get.ancestors.map(_.data)
+    val x1Ancestors = next.nodes.find(_.data == "x1").get.ancestors.map(_.data)
     println(x1Ancestors.mkString(" -> "))
     x1Ancestors should contain theSameElementsInOrderAs List("x1", "x", "A", "R")
   }
