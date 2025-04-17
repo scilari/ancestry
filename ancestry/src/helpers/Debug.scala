@@ -22,7 +22,7 @@ object Debug {
       }
     }
 
-    val info = s"Tree: nodes = ${tree.nodeCount} (${tree.leafCount}), depth = ${tree.depth}"
+    val info = s"Tree: nodes = ${tree.nodeCount} (${tree.leafCount}), depth = ${tree.height}"
     val recRepresentation = rec(tree, 0)
     info + "\n" + recRepresentation
   }

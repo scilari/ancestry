@@ -14,13 +14,13 @@ sealed trait Tree[T] extends NextGenerationProducer[T] {
     */
   var weight: Double = 0.0
 
-  /** Depth of the tree. Distance to the furthest leaf.
+  /** Height of the tree. Distance to the furthest leaf.
     *
     * @return
     */
-  def depth: Int
+  def height: Int
 
-  /** Level of the tree. Distance to the root node.
+  /** Level (depth) of the tree. Distance to the root node.
     *
     * @return
     */
@@ -127,7 +127,7 @@ final case class Branch[T](
 
   def this(data: T, child: Tree[T]) = this(data, List(child))
 
-  def depth: Int = 1 + children.map { _.depth }.max
+  def height: Int = 1 + children.map { _.height }.max
   def updateWeight(dataWeight: T => Double): Double = {
     weight = children.map { _.updateWeight(dataWeight) }.sum
     weight
@@ -149,7 +149,7 @@ final case class Leaf[T](
     data: T
 ) extends Tree[T] {
 
-  def depth: Int = 1
+  def height: Int = 0
   def nodes = List(this)
   def nodeCount: Int = 1
 

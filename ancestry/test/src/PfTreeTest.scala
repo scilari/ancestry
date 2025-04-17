@@ -70,7 +70,7 @@ class PfTreeTests extends AnyFlatSpec with should.Matchers {
 
       assert(tree.size <= 2 * particleCount + 1, "Tree node size is bounded by O(particleCount)")
       assert(tree.leaves.size == particleCount, "Particle count should stay constant")
-      assert(tree.depth <= t + 2, "Depth should not exceed updates")
+      assert(tree.height <= t + 2, "Depth should not exceed updates")
 
   }
 
