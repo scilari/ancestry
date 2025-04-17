@@ -2,43 +2,117 @@ package com.scilari.ancestry.core
 
 import scala.collection.immutable.ArraySeq
 import com.scilari.ancestry.AncestryTree
+import scala.annotation.tailrec
 
 sealed trait Tree[T] extends NextGenerationProducer[T] {
 
-  // Payload
+  /** Payload
+    */
   val data: T
 
-  // Combined weight of this subtree (updated by updateWeight)
+  /** Weight of the data. This is used to calculate the weight of the tree (sum of all leaves).
+    */
   var weight: Double = 0.0
 
-  // Distance to the furthers leaf
+  /** Depth of the tree. Distance to the furthest leaf.
+    *
+    * @return
+    */
   def depth: Int
 
-  // Distance to the root node
+  /** Level of the tree. Distance to the root node.
+    *
+    * @return
+    */
   def level: Int = parent match {
     case None    => 0
     case Some(p) => 1 + p.level
   }
 
-  // Recursively updates subtrees based on data weighing
+  /** Recursive update of leaf weigths
+    *
+    * @param dataWeight
+    * @return
+    */
   def updateWeight(dataWeight: T => Double): Double
 
+  /** Size of the tree. Number of nodes in the tree.
+    *
+    * @return
+    */
   def size = nodes.size
 
+  /** Returns all nodes in the tree. This includes the root node, all branches and leaves.
+    *
+    * @return
+    */
   def nodes: List[Tree[T]]
+
+  /** Number of nodes in the tree.
+    *
+    * @return
+    */
   def nodeCount: Int
+
+  /** Returns all leaves in the tree.
+    *
+    * @return
+    */
   def leaves: List[Leaf[T]] = leavesAcc(Nil)
+
+  /** All leaves in the tree. This is a cached version of the leaves.
+    */
   lazy val leavesCached: ArraySeq[Leaf[T]] = ArraySeq(leavesAcc(Nil)*)
+
+  /** Number of leaves in the tree.
+    *
+    * @return
+    */
   def leafCount: Int
 
-  private[core] def leavesAcc(acc: List[Leaf[T]]): List[Leaf[T]]
-
-  // Ancestors starting from current node and ending to the root
+  /** Ancestors of the current node. This includes the current node and all parents up to the root
+    * (inclusive).
+    *
+    * @return
+    */
   def ancestors: List[Tree[T]] = this :: parent.map { _.ancestors }.getOrElse(Nil)
+
+  /** The root node of the tree.
+    *
+    * @return
+    */
+  @tailrec
+  final def root: Tree[T] = {
+    parent match {
+      case None    => this
+      case Some(p) => p.root
+    }
+  }
+
+  /** True if the node is the root of the tree.
+    *
+    * @return
+    */
+  def isRoot: Boolean = parent.isEmpty
+
+  /** True if the node is a leaf.
+    *
+    * @return
+    */
+  def isLeaf: Boolean = this match {
+    case _: Leaf[T] => true
+    case _          => false
+  }
+
+  /** True if the node is a branch.
+    *
+    * @return
+    */
+  def isBranch: Boolean = !isLeaf
 
   private[ancestry] var parent: Option[Branch[T]] = None
 
-  def isRoot: Boolean = parent.isEmpty
+  private[core] def leavesAcc(acc: List[Leaf[T]]): List[Leaf[T]]
 
 }
 
