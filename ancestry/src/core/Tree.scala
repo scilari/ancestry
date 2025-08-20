@@ -64,6 +64,21 @@ sealed trait Tree[T] extends NextGenerationProducer[T] {
     */
   lazy val leavesCached: ArraySeq[Leaf[T]] = ArraySeq(leavesAcc(Nil)*)
 
+  
+  /** All branches in the tree.
+    */
+  def branches: List[Branch[T]] = nodes.collect { case b: Branch[T] => b }
+
+  /** Leaves and branches in the tree.
+   *  Avoids recursing two times.
+    *
+    * @return
+    */
+  def leavesAndBranches: (List[Leaf[T]], List[Branch[T]]) = {
+    val (ls, bs) = nodes.partition(_.isLeaf)
+    (ls.asInstanceOf[List[Leaf[T]]], bs.asInstanceOf[List[Branch[T]]])
+  }
+
   /** Number of leaves in the tree.
     *
     * @return
