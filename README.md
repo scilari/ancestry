@@ -3,3 +3,5 @@ Ancestry trees are a lightweight pattern that can be used for example in particl
 
 ## References
 [1] [Quadtree-based ancestry tree maps for 2D scattered data SLAM](https://www.tandfonline.com/doi/abs/10.1080/01691864.2018.1436468)
+[2] [Ancestry Tree Clustering for Particle Filter
+Diversity Maintenance] (https://arxiv.org/pdf/2509.24124?)
